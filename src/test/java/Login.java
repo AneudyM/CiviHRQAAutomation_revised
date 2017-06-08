@@ -11,7 +11,6 @@ public class Login extends DriverManager {
     Login(String u, String p){
         username = u;
         password = p;
-
     }
 
     public void logIn() throws Exception {

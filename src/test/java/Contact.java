@@ -1,6 +1,8 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.util.List;
+
 /**
  * Created by aneudy on 07/06/17.
  */
@@ -15,7 +17,7 @@ public class Contact extends DriverManager {
         this.email = email;
     }
 
-    public void create(){
+    public void create() throws Exception {
         WebElement contactButton = driver.findElement(By.xpath("//*[@id=\"civicrm-menu\"]/li[4]"));
         contactButton.click();
         WebElement newIndividual = driver.findElement(By.linkText("New Individual"));
@@ -30,27 +32,21 @@ public class Contact extends DriverManager {
         saveButton.click();
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public WebElement getContactByEmail(String email) throws Exception {
+        WebElement searchField = driver.findElement(By.name("sort_name"));
+        searchField.click();
+        driver.findElement(By.xpath("//*[@id=\"root-menu-div\"]/div[1]/ul/li[6]/div/label/input")).click();
+        searchField.sendKeys(email);
+        WebElement results = driver.findElement(By.id("ui-id-1"));
+        waitUntilVisible(results, 20);
+        List<WebElement> list = results.findElements(By.tagName("li"));
+        for (WebElement item : list) {
+            if (item.getText().contains(email)){
+                return item;
+            } else {
+                return null;
+            }
+        }
+        return null;
     }
 }
